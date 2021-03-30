@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.Apio.Extensions;
 using DevIO.Apio.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
@@ -27,7 +28,7 @@ namespace DevIO.Apio.Controllers
             _enderecoRepository = enderecoRepository;
         }
 
-        [AllowAnonymous]
+        [ClaimAuthorize("Fornecedor", "Atualizar")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
         {
@@ -36,7 +37,7 @@ namespace DevIO.Apio.Controllers
 
             return Ok(fornecedores);
         }
-        
+
         [HttpGet("obter-endereco/{id:guid}")]
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterEnderecoPorId(Guid id)
         {
@@ -60,6 +61,7 @@ namespace DevIO.Apio.Controllers
             return Ok(fornecedor);
         }
 
+        [ClaimAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel fornecedorViewModel)
         {
@@ -75,6 +77,7 @@ namespace DevIO.Apio.Controllers
             return CustomResponse(fornecedorViewModel);
         }
 
+        [ClaimAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Atualizar([FromRoute] Guid id, [FromBody] FornecedorViewModel fornecedorViewModel)
         {
@@ -93,8 +96,8 @@ namespace DevIO.Apio.Controllers
             await _fornecedorService.Atualizar(fornecedor);
 
             return CustomResponse(fornecedorViewModel);
-        } 
-        
+        }
+
         [HttpPut("atualizar-endereco/{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> AtualizarEndereco([FromRoute] Guid id, [FromBody] EnderecoViewModel enderecoViewModel)
         {
@@ -116,6 +119,7 @@ namespace DevIO.Apio.Controllers
             return CustomResponse(enderecoViewModel);
         }
 
+        [ClaimAuthorize("Fornecedor", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Excluir([FromRoute] Guid id)
         {

@@ -3,18 +3,11 @@ using DevIO.Apio.Configuration;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Net.Http.Headers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevIO.Apio
 {
@@ -35,12 +28,15 @@ namespace DevIO.Apio
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            //identity
             services.AddIdentityConfiguration(Configuration);
 
+            //automapper
             services.AddAutoMapper(typeof(Startup));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            //versionamento
             services.AddApiVersioning(options =>
             {
                 options.AssumeDefaultVersionWhenUnspecified = true;
@@ -48,6 +44,7 @@ namespace DevIO.Apio
                 options.ReportApiVersions = true;
             });
 
+            //versionamento
             services.AddVersionedApiExplorer(options =>
             {
 
@@ -57,11 +54,13 @@ namespace DevIO.Apio
 
             services.ResolveDependencies();
 
+            //removendo validação antes de entrar na controller
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
+            //cors
             services.AddCors(options =>
             {
                 options.AddPolicy("Development", builder =>
@@ -82,10 +81,12 @@ namespace DevIO.Apio
                 });
             });
 
+            //chamando classe do swagger
+            services.AddSwaggerConfig();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {
@@ -104,6 +105,9 @@ namespace DevIO.Apio
             //use autentication tem que sempre vir antes do MVC
             app.UseAuthentication();
             app.UseMvc();
+
+            //chamando classe do swagger
+            app.UserSwaggerConfig(provider);
         }
     }
 }

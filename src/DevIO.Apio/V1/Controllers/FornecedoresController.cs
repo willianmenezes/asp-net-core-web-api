@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.Apio.Controllers;
 using DevIO.Apio.Extensions;
 using DevIO.Apio.ViewModels;
 using DevIO.Business.Intefaces;
@@ -9,10 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DevIO.Apio.Controllers
+namespace DevIO.Apio.V1.Controllers
 {
     [Authorize]
-    [Route("api/[Controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}[Controller]")]
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
@@ -20,11 +22,11 @@ namespace DevIO.Apio.Controllers
         private readonly IEnderecoRepository _enderecoRepository;
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, 
-                                      IMapper mapper, 
-                                      IFornecedorService fornecedorService, 
-                                      INotificador notificador, 
-                                      IEnderecoRepository enderecoRepository, 
+        public FornecedoresController(IFornecedorRepository fornecedorRepository,
+                                      IMapper mapper,
+                                      IFornecedorService fornecedorService,
+                                      INotificador notificador,
+                                      IEnderecoRepository enderecoRepository,
                                       IUser user) : base(notificador, user)
         {
             _fornecedorRepository = fornecedorRepository;

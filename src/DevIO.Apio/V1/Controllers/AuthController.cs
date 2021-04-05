@@ -1,4 +1,5 @@
-﻿using DevIO.Apio.Extensions;
+﻿using DevIO.Apio.Controllers;
+using DevIO.Apio.Extensions;
 using DevIO.Apio.ViewModels;
 using DevIO.Business.Intefaces;
 using Microsoft.AspNetCore.Identity;
@@ -13,9 +14,10 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DevIO.Apio.Controllers
+namespace DevIO.Apio.V1.Controllers
 {
-    [Route("api")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;

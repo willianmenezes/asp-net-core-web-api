@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DevIO.Apio.Controllers;
 using DevIO.Apio.ViewModels;
 using DevIO.Business.Intefaces;
 using DevIO.Business.Models;
@@ -10,9 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DevIO.Apio.Controllers
+namespace DevIO.Apio.V1.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class ProdutosController : MainController
     {

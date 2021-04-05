@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Net.Http.Headers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,27 @@ namespace DevIO.Apio
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                });
+
+                options.AddPolicy("Production", builder =>
+                {
+                    builder.WithMethods("GET")
+                           .WithOrigins("https://desenvolvedor.io")
+                           .SetIsOriginAllowedToAllowWildcardSubdomains()
+                           //.WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                           .AllowAnyHeader();
+                });
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,19 +75,20 @@ namespace DevIO.Apio
         {
             if (env.IsDevelopment())
             {
+                app.UseCors("Development");
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseCors("Production");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            //use autentication tem que sempre vir antes do MVC
-            app.UseAuthentication();
-
             app.UseHttpsRedirection();
 
+            //use autentication tem que sempre vir antes do MVC
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

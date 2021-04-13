@@ -14,7 +14,7 @@ namespace DevIO.Apio.V1.Controllers
 {
     [Authorize]
     [ApiVersion("1.0")]
-    [Route("api/v{version:apiVersion}[Controller]")]
+    [Route("api/v{version:apiVersion}/[Controller]")]
     public class FornecedoresController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
